@@ -1,3 +1,3 @@
 # myTest
 just test
-能用中问吗
+能用中文
