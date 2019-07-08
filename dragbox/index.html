@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>拖拽盒子</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #box {
+            position: absolute;
+            left: 100px;
+            top: 100px;
+            width: 100px;
+            height: 100px;
+            background: orange;
+            text-align: center;
+            line-height: 100px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="box">box</div>
+
+    <script>
+        var  box = document.getElementById("box");
+        // console.log(box.style.left); //注意div.style.left 只能获取行间样式
+
+        box.onmousedown = function (event) {
+            event = event || window.event;
+            var dis = {};
+            dis.x = event.pageX - this.offsetLeft;
+            dis.y = event.pageY - this.offsetTop;
+
+            var _this = this;
+            // 鼠标移动太快会脱离box,所以绑定在document上,注意不是document.body
+            document.onmousemove = function (event) {
+                event = event || window.event;
+
+                //IE9以下也不认识_
+                _this.style.left = event.pageX - dis.x + "px";
+                _this.style.top = event.pageY - dis.y + "px";
+            }
+
+            document.onmouseup = function () {
+                this.onmousemove = null;
+                this.onmousup = null;
+            }
+
+            return false; // 防止拖拽文字
+            
+        }
+    </script>
+</body>
+
+</html>
