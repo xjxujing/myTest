@@ -1,85 +1,94 @@
 <template>
-  <section class="list">
-    <header class="header">
-      <h1>{{ title }}</h1>
-      <div class="add-todo">
-        <span>+</span>
-        <input placeholder="请输入待办事项" autofocus v-model.trim="newtodo" @keyup.enter="addTodo" />
+  <div class="list">
+    <div class="status" :style="{right: right + 'px'}" @click="apear()">已登录</div>
+    <header>
+      <div class="container">
+        <h1>任务计划列表</h1>
       </div>
-      <!-- @input="addTodo($event)" -->
     </header>
-    <!-- This section should be hidden by default and shown when there are todos -->
-    <section class="main" v-if="todos.length">
-      <div class="about">
-        <div class="all">
-          <input
-            id="todo-list"
-            class="toggle-all"
-            type="checkbox"
-            v-model="isAll"
-            @change="saveStates"
-          />
-          <label for="todo-list"></label>
-          <span>全部完成</span>
-        </div>
-        <span class="todo-count">
-          <strong>{{ remain }}</strong>个待办事项
-        </span>
-        <button class="clear-completed" @click="clear()">清理完成事项</button>
+
+    <div class="container">
+      <div class="add-todo">
+        <h3>添加任务</h3>
+        <input placeholder="请输入待办任务" autofocus v-model.trim="newtodo" @keyup.enter="addTodo" />
       </div>
-      <ul class="todo-list">
-        <li
-          v-for="(todo,index) in filterTodos"
-          :key="todo.index"
-          :class="{completed: todo.completed, editing: todo === editTodoed}"
-        >
-          <div class="view">
-            <!-- v-model 这里v-model绑定了todo.completed -->
+
+      <nav class="nav" v-if="todos.length">
+        <span class="todo-count">
+          <strong>{{ remain }}</strong>个任务未完成
+        </span>
+        <ul class="filters">
+          <li :class="{selected: hashName == 'all'}">
+            <a href="#/">全部任务</a>
+            <a class="small" href="#/">全部</a>
+          </li>
+          <li :class="{selected: hashName == 'active'}">
+            <a href="#/active">待办任务</a>
+            <a class="small" href="#/active">待办</a>
+          </li>
+          <li :class="{selected: hashName == 'completed'}">
+            <a href="#/completed">完成任务</a>
+            <a class="small" href="#/completed">完成</a>
+          </li>
+        </ul>
+      </nav>
+
+      <!-- 待办任务开始 -->
+      <section class="main" v-if="todos.length">
+        <h3>任务列表</h3>
+
+        <ul class="todo-list">
+          <li
+            v-for="(todo,index) in filterTodos"
+            :key="todo.index"
+            :class="{completed: todo.completed, editing: todo === editTodoed}"
+          >
+            <div class="view">
+              <!-- v-model 这里v-model绑定了todo.completed -->
+              <input
+                :id="'toggle'+index"
+                type="checkbox"
+                v-model="todo.completed"
+                @change="saveStates"
+              />
+              <label :for="'toggle'+index"></label>
+              <span @dblclick="editTodo(todo)">{{ todo.content }}</span>
+              <button class="destroy" @click="remove(index)">
+                <span>X</span>
+              </button>
+            </div>
+
             <input
-              :id="'toggle'+index"
-              type="checkbox"
-              v-model="todo.completed"
+              class="edit"
+              value="Rule the web"
+              v-model.trim="todo.content"
+              v-focus
+              @blur="doneEdit(todo,index)"
+              @keyup.esc="cancleEdit(todo)"
+              @keyup.enter="doneEdit(todo,index)"
               @change="saveStates"
             />
-            <label :for="'toggle'+index"></label>
-            <span @dblclick="editTodo(todo)">{{ todo.content }}</span>
-            <button class="destroy" @click="remove(index)">
-              <span>X</span>
-            </button>
+          </li>
+        </ul>
+        <br />
+        <footer>
+          <div class="all">
+            <input
+              id="todo-list"
+              class="toggle-all"
+              type="checkbox"
+              v-model="isAll"
+              @change="saveStates"
+            />
+            <label for="todo-list">全部标记完成</label>
+            <!-- <span></span> -->
           </div>
-
-          <input
-            class="edit"
-            value="Rule the web"
-            v-model.trim="todo.content"
-            v-focus
-            @blur="doneEdit(todo,index)"
-            @keyup.esc="cancleEdit(todo)"
-            @keyup.enter="doneEdit(todo,index)"
-            @change="saveStates"
-          />
-        </li>
-      </ul>
-    </section>
-    <!-- This footer should hidden by default and shown when there are todos -->
-    <footer class="footer" v-if="todos.length">
-      <!-- This should be `0 items left` by default -->
-
-      <!-- Remove this if you don't implement routing -->
-      <ul class="filters">
-        <li>
-          <a :class="{selected: hashName == 'all'}" href="#/">全部事项</a>
-        </li>
-        <li>
-          <a :class="{selected: hashName == 'active'}" href="#/active">待办事项</a>
-        </li>
-        <li>
-          <a :class="{selected: hashName == 'completed'}" href="#/completed">完成事项</a>
-        </li>
-      </ul>
-      <!-- Hidden if no completed items are left ↓ -->
-    </footer>
-  </section>
+          <button class="clear-completed" @click="clear()">清理完成任务</button>
+        </footer>
+      </section>
+      <!-- 待办任务开始 -->
+    </div>
+  </div>
 </template>
 
 <script>
@@ -90,7 +99,6 @@ export default {
   data() {
     return {
       msg: "hello",
-      title: "我的待办",
       newtodo: "",
       todos: [
         // { content: "vuevue", complated: false },
@@ -98,8 +106,9 @@ export default {
       ],
       editTodoed: null,
       editCache: "",
-      hashName: "all"
+      hashName: "all",
       // hashName: location.hash.replace(/#\/?/, "")
+      right: ""
     };
   },
   watch: {
@@ -154,6 +163,9 @@ export default {
         location.hash = "";
         this.hashName = "all";
       }
+    },
+    apear() {
+      this.right = 0;
     }
   },
   directives: {
@@ -208,6 +220,7 @@ export default {
 <style scoped>
 .list ul,
 h1,
+h3,
 input,
 button,
 a {
@@ -216,161 +229,159 @@ a {
   list-style-type: none;
   text-decoration: none;
 }
-
-.list {
-  margin: 100px auto;
-  width: 400px;
+h3 {
+  padding: 15px 0;
+}
+.container {
+  max-width: 50%;
+  margin: 0 auto;
+}
+input[type="checkbox"] {
+  display: none;
 }
 
-/* 列表头部分 */
-.list input[type="text"] {
-  outline-color: #af7eeb;
-}
-
-.header h1 {
-  line-height: 50px;
-  text-align: center;
-  background-color: #efd5d5;
-}
-.add-todo {
-  display: flex;
+/* 头部分 */
+header {
+  width: 100%;
   padding: 10px 0;
+  color: #ccc;
+  background-color: #db4c3f;
+}
+header h1 {
+  color: #fff;
+}
+@media (max-width: 768px) {
+  header {
+    text-align: center;
+  }
+  .container {
+    max-width: 85%;
+    margin: 0 auto;
+  }
+}
+
+/* 添加任务部分 */
+.add-todo {
+  width: 100%;
+}
+
+input {
+  box-sizing: border-box;
   width: 100%;
   height: 30px;
-}
-.add-todo span {
-  flex-basis: 30px;
-  font-size: 22px;
-  text-align: center;
-}
-.add-todo input {
-  flex-grow: 1;
-  border: none;
-  border: 2px solid #ccc;
-  outline-color: #af7eeb;
+  padding: 0 10px;
+  outline-color: #db4c3f;
 }
 
-/* 中间小部分 */
-.about {
-  height: 30px;
+/* nav部分 */
+.nav {
   display: flex;
+  margin-top: 15px;
+  height: 30px;
   line-height: 30px;
   justify-content: space-between;
 }
-
-.about #todo-list {
+.nav span {
+  color: #db4c3f;
+}
+.nav ul {
+  display: flex;
+}
+.nav ul li {
+  padding: 0 10px;
+}
+.nav ul li a {
+  color: #808080;
+}
+.nav ul li a[class="small"] {
   display: none;
 }
-.about .todo-count {
-  display: inline-block;
-  text-align: center;
+.nav ul .selected {
+  border: 1px dotted #db4c3f;
+  border-radius: 5px;
 }
-.clear-completed {
-  float: right;
-  border: none;
-  background-color: #af7eeb;
-}
-.about #todo-list + label {
-  display: inline-block;
-  width: 10px;
-  height: 10px;
-  border: 2px solid #af7eeb;
+@media (max-width: 768px) {
+  .nav ul li a {
+    display: none;
+  }
+  .nav ul li a[class="small"] {
+    display: block;
+  }
 }
 
-/* 待办列表 */
-.todo-list {
-  border-radius: 5px 5px 0 0;
-  background-color: rgba(175, 126, 235, 0.2);
-}
-.todo-list li {
+/* 任务列表部分 */
+.main .todo-list li {
   position: relative;
-  border-bottom: 1px solid #af7eeb;
+  background-color: #fff;
+  margin: 10px 0;
+  color: #808080;
 }
-.todo-list li:last-child {
-  border-bottom: none;
-}
-
-.todo-list .view {
+.view {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0 10px;
 }
-
-/* 待办列表的小圆点 */
-.todo-list .view input {
-  display: none;
-}
-
-.todo-list .view input + label {
-  box-sizing: border-box;
-  min-width: 15px;
-  height: 15px;
-  border-radius: 50%;
-  border: 2px solid #af7eeb;
-}
-
-.todo-list .view input:checked + label,
-#todo-list:checked + label {
-  background-color: rgba(175, 126, 235, 0.6);
-}
-
-/* 待办列表的删除 */
-.todo-list .view button {
-  min-width: 15px;
-  font-size: 16px;
-  border: none;
-}
-
-.todo-list .view > span {
+.view label {
   display: inline-block;
-  flex-grow: 1;
-  box-sizing: border-box;
-  max-width: 350px;
-  padding: 10px;
-  font-size: 18px;
-  word-wrap: break-word;
+  min-width: 40px;
+  height: 40px;
+  background: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2240%22%20height%3D%2240%22%20viewBox%3D%22-10%20-18%20100%20135%22%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2250%22%20fill%3D%22none%22%20stroke%3D%22%23ededed%22%20stroke-width%3D%223%22/%3E%3C/svg%3E")
+    no-repeat 50% 50%;
 }
-
+.view input[type="checkbox"]:checked + label {
+  background-image: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2240%22%20height%3D%2240%22%20viewBox%3D%22-10%20-18%20100%20135%22%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2250%22%20fill%3D%22none%22%20stroke%3D%22%23bddad5%22%20stroke-width%3D%223%22/%3E%3Cpath%20fill%3D%22%235dc2af%22%20d%3D%22M72%2025L42%2071%2027%2056l-4%204%2020%2020%2034-52z%22/%3E%3C/svg%3E");
+}
+.view span {
+  flex-grow: 1;
+  margin: 0 10px;
+}
+.todo-list .completed .view span {
+  text-decoration: line-through;
+  color: #d9d9d9;
+}
 .todo-list li .edit {
   display: none;
+}
+.todo-list .editing .edit {
+  margin-left: 50px;
+  width: 80%;
+  height: 40px;
 }
 .todo-list .editing .view {
   display: none;
 }
 .todo-list .editing .edit {
-  display: inline-block;
-  margin-left: 35px;
-  max-width: 365px;
-  padding: 10px;
-  font-size: 24px;
-  background-color: #e3e9ff;
-  border: none;
-  outline-color: #af7eeb;
-  /* word-wrap: break-word; */
-}
-.footer span {
   display: block;
-  width: 100%;
-  text-align: center;
 }
 
-.footer .filters {
+/* 尾部 */
+footer {
   display: flex;
-  justify-content: space-around;
+  margin-top: 20px;
+  justify-content: space-between;
+  align-items: center;
 }
-.footer .filters li {
-  flex-grow: 1;
+
+footer label,
+footer button {
+  min-width: 25px;
+  border: none;
+  background-color: #db4c3f;
+  color: #fff;
+  padding: 10px;
+  font-size: 14px;
+}
+.status {
+  position: fixed;
+  right: -50px;
+  top: 80px;
+  width: 60px;
+  text-align: center;
   height: 30px;
   line-height: 30px;
-  text-align: center;
-  background-color: #af7eeb;
-}
-.footer .filters li a {
-  display: block;
-  color: #000;
-}
-.footer .filters .selected {
-  background-color: #ccc;
+  background-color: #db4c3f;
+  border-radius: 10px 0 0 10px;
+  z-index: 100;
 }
 </style>

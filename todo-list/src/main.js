@@ -5,6 +5,16 @@ import App from './App'
 
 Vue.config.productionTip = false
 
+
+var APP_ID = "XQlut690CCSYBbUgtGh4LFwI-gzGzoHsz";
+var APP_KEY = "tkxoyTifYWHkfzrVjA37TjL7";
+var AV = require('leancloud-storage')
+AV.init({
+  appId: APP_ID,
+  appKey: APP_KEY
+});
+
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
