@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <!-- <link rel="stylesheet" href="./index.css"> -->
+    <style>
+        .content {
+            width: 300px;
+            height: 300px;
+            background: hotpink;
+            margin-bottom: 10px;
+        }
+
+        .tool {
+            width: 300px;
+            height: 30px;
+        }
+
+        .progress {
+            /* box-sizing: border-box; */
+            float: left;
+            width: 250px;
+            height: 30px;
+            border: 1px solid red;
+            border-radius: 15px;
+            background: pink;
+            overflow: hidden;
+        }
+
+        .val {
+            width: 0;
+            height: 30px;
+            background: #333;
+        }
+
+        .text {
+            float: right;
+            width: 48px;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            /* background: pink; */
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 先看布局 -->
+    <div class="content">
+        拖拽文件到此区域
+    </div>
+    <div class="tool">
+        <div class="progress">
+            <div class="val"></div>
+        </div>
+        <div class="text">0%</div>
+    </div>
+
+    <script src="tools.js"></script>
+    <script>
+        var content = document.getElementsByClassName("content")[0];
+        var val = document.getElementsByClassName("val")[0];
+        var text = document.getElementsByClassName("text")[0];
+        
+        
+
+        content.addEventListener("dragover", function (e) {
+            e.preventDefault();
+        })
+
+        content.addEventListener("drop", function (e) {
+            // 直接拖拽一个文件到浏览器默认是打开的，需要取消默认事件
+            e.preventDefault();
+
+            // 获取文件数据
+            file = e.dataTransfer.files[0];
+            // console.log(file);
+
+            // total = file.size;
+
+            // // 读取文件
+            // readBlob(reader, 0, step);
+
+            // // 读取过程的操作
+            // blobEvent();
+            var loader = new FileLoader(file, events)
+
+        })
+
+
+
+
+        var events = {
+            progressIng: function (per) {
+                val.style.width = per * 250 + "px";
+                if (per > 1) {
+                    per = 1;
+                }
+                text.innerHTML = Math.round(per * 100) + "%";
+            },
+            stepLoad: function (loaded) {
+                console.log("上传" + loaded + "部分");
+            },
+            finish: function() {
+                console.log("上传完成");
+            }
+        }
+
+
+
+        // 优化 改变宽度、百分比是用户的操作,还有上传过程中打印出来的提示用户都应该可以控制才对
+        // 与文件上传相关的操作封装
+    </script>
+
+</body>
+
+</html>

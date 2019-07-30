@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>拖拽盒子</title>
+    <style>
+        .box {
+            position: absolute;
+            top: 100px;
+            left: 100px;
+            width: 100px;
+            height: 100px;
+            background: orange;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="box">box</div>
+
+
+</body>
+<script src="./jquery-3.4.1.js"></script>
+<script>
+
+    $(".box").mousedown(function (e) {
+        // 返回当前元素相对document的top, left值的对象
+        var offset = $(this).offset();
+        var dis = {};
+
+        dis.x = e.pageX - offset.left;
+        dis.y = e.pageY - offset.top;
+
+        var _this = this;
+        // 鼠标移动太快，会与元素脱离 所以绑定在document上
+        $(document).mousemove(function (e) {
+            // 注意这里this的指向
+            $(_this).css({
+                left: e.pageX - dis.x,
+                top: e.pageY - dis.y
+            });
+        }).mouseup(function () {
+            // 解除绑定的事件
+            $(this).off("mousemove mouseup");
+        })
+        return false; // 加这个，防止拖拽成文字
+
+    })
+
+</script>
+
+</html>

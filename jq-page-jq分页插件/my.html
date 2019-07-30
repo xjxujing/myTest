@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>my分页插件</title>
+    <link rel="stylesheet" href="./css/mypage.css">
+</head>
+<body>
+    <div class="pagediv">
+        <!-- <a href="javascript:;" class="prev"><上一页</a>
+        <a href="javascript:;" class="page">1</a>
+        <a href="javascript:;" class="page">2</a>
+        <span class="omit">...</span>
+        <a href="javascript:;" class="page">3</a>
+        <a href="javascript:;" class="page">4</a>
+        <a href="javascript:;" class="page">5</a>
+        <span class="active">5</span>
+        <a href="javascript:;" class="page">6</a>
+        <a href="javascript:;" class="page">7</a>
+        <a href="javascript:;" class="next">下一页></a> -->
+    </div>
+
+    <script src="./js/jquery-3.4.1.js"></script>
+    <script src="./js/mypage.js"></script>
+    <script>
+    $(".pagediv").paging({
+        // 用户定义总页数
+        pageCount: 20,
+        // 用户定义当前页
+        current: 10,
+        cb: function () {
+            console.log(888)
+        }
+    })
+
+    
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>双击出现小星星</title>
+    <style>
+        img {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            margin-left: -15px;
+            margin-top: -15px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- <img src="./timg.png" alt="小星星" style="top: 100px; left: 10px"> -->
+</body>
+
+<script src="./jquery-3.4.1.js"></script>
+<script>
+    // 取消默认事件，右键可以不出现菜单
+    $(document).contextmenu(function () {
+        return false;
+    })
+
+
+    $(document).mousedown(function (e) {
+
+        console.log(e.which);
+        // 鼠标位置
+        // console.log(e.pageX,e.pageY);
+        // console.log('<img src="./timg.png" alt="小星星" style="top: ' + e.pageX + 'px;' + 'left: ' + e.pageY + 'px;"' + '>')
+
+        $("body").append('<img src="./timg.png" alt="小星星" style="top: ' + e.pageY + 'px;' + 'left: ' + e.pageX + 'px;"' + '>');
+    })
+
+
+</script>
+
+</html>
