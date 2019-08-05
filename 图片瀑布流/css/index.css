@@ -1,0 +1,31 @@
+body, ul, li {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.clearfix::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+.wrapper {
+    text-align: center;
+}
+.list {
+    display: inline-block;
+    min-width: 1008px;
+}
+.list li {
+    float: left;
+}
+.list .item {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 5px;
+    margin: 5px;
+}
+.list .item img {
+    /* img是特殊对的行内块元素，加个display:block消除上下的高度 */
+    display: block;
+    width: 230px;
+}
