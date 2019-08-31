@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>明星全选</title>
+</head>
+
+<body>
+    <ul class="star">
+        <li class="title">
+            <input type="checkbox">
+            <span>明星</span>
+        </li>
+        <li>
+            <input type="checkbox">
+            <span>SHE</span>
+        </li>
+        <li>
+            <input type="checkbox">
+            <span>刘昊然</span>
+        </li>
+        <li>
+            <input type="checkbox">
+            <span>易烊千玺</span>
+        </li>
+        <li>
+            <input type="checkbox">
+            <span>杨超越</span>
+        </li>
+    </ul>
+    <script src="./jquery-3.4.1.js"></script>
+<script>
+    // 判断是否勾选title 控制下方全选或者全不选
+    $(".title input").change(function () {
+        if ($(".title input").prop("checked")) {  // 这里prop返回的是true或者false attr()判断不出来
+            $("ul input").prop("checked", true)
+        } else {
+            $("ul input").prop("checked", false)
+        }
+    })
+    
+    // 通过下方选项控制title的勾选
+    // 下面的四个选项全选的时候会自动加上第一个，或者下面四个有一个没选中，第一个都不会被选中
+    var oInput = $("ul input").not(".title input");
+    var len = oInput.length;
+
+    oInput.change(function () {
+        for (var i = 0; i < len; i++) {
+            if ( !oInput.eq(i).prop("checked") ) {
+                $(".title input").prop("checked", false);
+                return;
+            }
+        }
+        // for(var oneInput of oInput){
+        //     console.log(oneInput); // 出来的是DOM元素 不是JQuery对象 没有prop方法 所以不可用
+        //     if(!oneInput.prop("checked")){
+        //         $(".title input").prop("checked",false);
+        //         return;
+        //     }
+        // }
+        $(".title input").prop("checked", true);
+    })
+
+</script>
+</body>
+
+</html>

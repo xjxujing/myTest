@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>感知鼠标进入方向</title>
+    <style>
+    body, ul, li {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+    ul {
+        display: flex;
+        width: 80%;
+        min-width: 600px;;
+        margin: 0 auto;
+        font-size: 0;
+    }
+    li {
+        position: relative;
+        margin: 0 10px;
+        border: 2px solid purple;
+        border-radius: 20px;
+        overflow: hidden;
+        background: rgba(0,0,0,.8);
+    }
+    li img {
+        width: 100%;
+        border-radius: 20px;
+        transform: translateY(100%);
+    }
+    .cover {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 45px;
+        overflow: hidden;
+    }
+    .des {
+        padding: 10px;
+        height: 45px;
+        font-size: 12px;
+        color: #fff;
+        background: linear-gradient(to bottom, transparent, rgba(0,0,0,.8));
+        transform: translate(100%)
+    }
+
+
+    /* js控制添加init属性，图片出现*/
+    .init img {
+        transform: translateY(0);
+    }
+
+    /* 页面加载完成，图片分别延迟出现 */
+    li:nth-child(1) img {
+        transition: transform 0.3s linear;
+    }
+    li:nth-child(2) img {
+        transition: transform 0.3s linear 0.1s;
+    }
+    li:nth-child(3) img {
+        transition: transform 0.3s linear 0.2s;
+    }
+    li:nth-child(4) img {
+        transition: transform 0.3s linear 0.3s;
+    }
+    li:nth-child(5) img {
+        transition: transform 0.3s linear 0.4s;
+    }
+    
+
+    /* 鼠标经过图片，下方文字描述出现 */
+    /* li:hover .cover{
+        transform: translateY(0);
+        transition: transform 0.3s
+    } */
+    
+
+    /* 设置文字描述在不同方向预备的位置 */
+    li .cover .in-top,
+    li .cover .out-top {
+        transform: translate(0, -100%)
+    }
+
+    li .cover .in-right,
+    li .cover .out-right {
+        transform: translate(100%, 0)
+    }
+
+    li .cover .in-left,
+    li .cover .out-left {
+        transform: translate(-100%, 0)
+    }
+
+
+    li .cover .in-bottom,
+    li .cover .out-bottom {
+        transform: translate(0, 100%)
+    }
+
+    /* 设置动画停在最后一帧 */
+    li .cover .in-top,
+    li .cover .in-right,
+    li .cover .in-bottom,
+    li .cover .in-left {
+        animation: inDes 0.3s linear forwards;
+    }
+    @keyframes inDes {
+        100% {
+            transform: translate(0, 0)
+        }
+    }
+
+    
+    li .cover .out-top {
+        animation: outTop 0.3s linear;
+    }
+    @keyframes outTop {
+        0% {
+            transform: translate(0, 0);
+        }
+        100% {
+            transform: translate(0, -100%);
+        }
+    }
+
+    li .cover .out-right {
+        animation: outRight 0.3s linear;
+    }
+    @keyframes outRight {
+        0% {
+            transform: translate(0, 0);
+        }
+        100% {
+            transform: translate(100%, 0);
+
+        }
+    }
+
+    li .cover .out-bottom {
+        animation: outBottom 0.3s linear;
+    }
+    @keyframes outBottom {
+        0% {
+            transform: translate(0, 0);
+        }
+        100% {
+            transform: translate(0, 100%);
+
+        }
+    }
+
+    li .cover .out-left {
+        animation: outLeft 0.3s linear;
+    }
+    @keyframes outLeft {
+        0% {
+            transform: translate(0, 0);
+        }
+        100% {
+            transform: translate(-100%, 0);
+
+        }
+    }
+
+    /* li .cover .out-right,
+    li .cover .out-bottom,
+    li .cover .out-left {
+        animation: inDes 0.3s linear;
+    } */
+
+    </style>
+</head>
+
+<body>
+    <ul>
+        <li>
+            <img src="./img/1.jpg" alt="">
+            <div class="cover">
+                <div class="des">描述描述描述描述描述描述描述描述描述</div>
+            </div>
+        </li>
+        <li>
+            <img src="./img/2.jpg" alt="">
+            <div class="cover">
+                <div class="des">描述描述描述描述描述描述描述描述描述</div>
+            </div>
+        </li>
+        <li>
+            <img src="./img/3.jpg" alt="">
+            <div class="cover">
+                <div class="des">描述描述描述描述描述描述描述描述描述</div>
+            </div>
+        </li>
+        <li>
+            <img src="./img/4.jpg" alt="">
+            <div class="cover">
+                <div class="des">描述描述描述描述描述描述描述描述描述</div>
+            </div>
+        </li>
+        <li>
+            <img src="./img/5.jpg" alt="">
+            <div class="cover">
+                <div class="des">描述描述描述描述描述描述描述描述描述</div>
+            </div>
+        </li>
+    </ul>
+
+    <script>
+
+    // var oImg = document.getElementsByTagName("img");
+    // window.onload = function () {
+    //     for(var i = 0; i< oImg.length; i++) {
+    //         oImg[i].style.transform = "translateY(0)";
+    //     }
+    // }
+
+    // 这里设置直接加属性性能好
+    var oUl = document.getElementsByTagName("ul")[0];
+    console.log(oUl);
+    window.onload = function () {
+        oUl.className = "init";
+    }
+
+
+    var oLi = document.getElementsByTagName("li");
+    console.log(oLi);
+    // var oDes = document.getElementsByClassName("des");
+
+    for( var i = 0; i< oLi.length; i++) {
+        // console.log(111);
+        oLi[i].onmouseenter = function (e) {
+            var dir = getDirection(e, this);
+            console.log(dir);
+            var oDes = this.getElementsByClassName("des")[0];
+            oDes.className = "des";
+            console.log(oDes);
+            switch(dir) {
+                case 0:
+                    oDes.classList.add("in-top");
+                    break;
+                case 1:
+                    oDes.classList.add("in-right");
+                    break;
+                case 2:
+                    oDes.classList.add("in-bottom");
+                    break;
+                case 3:
+                    oDes.classList.add("in-left");
+                    break;
+            }
+            
+        }
+    
+        oLi[i].onmouseleave = function (e) {
+            var dir = getDirection(e, this);
+            // console.log(dir);
+            var oDes = this.getElementsByClassName("des")[0];
+            oDes.className = "des";
+            switch(dir) {
+                case 0:
+                    oDes.classList.add("out-top");
+                    break;
+                case 1:
+                    oDes.classList.add("out-right");
+                    break;
+                case 2:
+                    oDes.classList.add("out-bottom");
+                    break;
+                case 3:
+                    oDes.classList.add("out-left");
+                    break;
+            }
+        }
+    }
+
+        function getDirection(e, ele) {
+            var w = ele.offsetWidth;
+            var h = ele.offsetHeight;
+
+            // 这里把坐标原点再元素左上角，转成了中心位置，然后计算坐标，所以进行了换算
+            var x = (e.offsetX - w/2) * (w > h ? h/w : 1);
+            var y = (e.offsetY - h/2) * (h > w ? w/h : 1);
+
+            var d =(Math.round( (Math.atan2(y,x)*(180/Math.PI)+180)/90 ) + 3) % 4;
+            // console.log(d);
+            return d;
+        }
+
+    </script>
+</body>
+</html>

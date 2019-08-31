@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>vue的全选和反选</title>
+    <style>
+        label {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <form action="">
+            <label for="">
+                全选<input type="checkbox" name="all" id="" :checked="isAll" @click="checkAll($event)">
+            </label>
+            <label for="" v-for="fruit,index in fruits" :key="index">
+                {{fruit.name}}<input type="checkbox" :name="fruit.engName" id="" v-model="fruit.checked">
+            </label>
+            <!-- <label for="">
+                全选<input type="checkbox" name="all" id="" v-model="">
+            </label>
+            <label for="">
+                苹果<input type="checkbox" name="apple" id="" v-model="apple">
+            </label>
+            <label for="">
+                梨子<input type="checkbox" name="pear" id="" v-model="pear">
+            </label>
+            <label for="">
+                香蕉<input type="checkbox" name="banana" id="" v-model="banana">
+            </label> -->
+
+            <input type="submit" value="提交">
+        </form>
+    </div>
+
+    <script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+    <script>
+        new Vue({
+            el: "#app",
+            data: {
+                fruits: [
+                    { name: "苹果", engName: "apple", checked: false },
+                    { name: "梨子", engName: "pear", checked: false },
+                    { name: "香蕉", engName: "banana", checked: false },
+                ],
+                isAll: false,
+            },
+            watch: {
+                fruits: {
+                    handler() {
+                        let flag = 0
+                        for (let fruit of this.fruits) {
+                            if (!fruit.checked) {
+                                this.isAll = false;
+                                return;
+                            }
+                        }
+                        this.isAll = true;
+                    },
+                    deep: true
+                }
+            },
+
+            methods: {
+                checkAll(e) {
+                    if (e.target.checked) {
+                        this.fruits.forEach(fruit => {
+                            fruit.checked = e.target.checked;
+                        });
+                    } else {
+                        this.fruits.forEach(fruit => {
+                            fruit.checked = e.target.checked;
+                        });
+                    }
+                }
+            }
+        })
+
+
+
+    </script>
+</body>
+
+</html>

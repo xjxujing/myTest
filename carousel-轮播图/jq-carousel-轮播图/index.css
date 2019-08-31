@@ -1,0 +1,71 @@
+ul, a {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    text-decoration: none;
+}
+
+.wrapper {
+    position: relative;
+    margin: 100px auto;
+    width: 590px;
+    height: 470px;
+    overflow: hidden;
+}
+
+.wrapper .pic {
+    position: absolute;
+    width: 2950px;
+}
+
+.wrapper .pic li {
+    float: left;
+}
+
+.wrapper .pic a {
+    cursor: default;
+}
+
+.wrapper .btn a {
+    display: inline-block;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 10px 5px;
+    font-size: 22px;
+    color: #fff;
+    background-color: rgba(0, 0, 0, .6);
+}
+
+.wrapper .btn .prev {
+    left: 0;
+}
+
+.wrapper .btn .next {
+    right: 0;
+}
+
+.wrapper .order {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    width: 80px;
+    justify-content: space-around;
+    background-color: rgba(0, 0, 0, .6);
+    border-radius: 15px;
+    padding: 5px 0;
+}
+
+.wrapper .order li {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, .8);
+    cursor: pointer;
+}
+
+.wrapper .order .active {
+    background-color: #ff5000;
+}

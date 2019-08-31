@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>vue-轮播图</title>
+    <style>
+        ul,
+        ol,
+        a {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            text-decoration: none;
+        }
+
+        #app {
+            position: relative;
+            margin: 100px auto;
+            width: 590px;
+            height: 470px;
+            overflow: hidden;
+
+        }
+
+        .pic {
+            position: absolute;
+            width: 590px;
+            height: 100%;
+        }
+
+        .pic li {
+            float: left;
+        }
+
+        .pic li a {
+            cursor: default;
+        }
+
+        .btn a {
+            display: inline-block;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 10px 5px;
+            font-size: 22px;
+            color: #fff;
+            background-color: rgba(0, 0, 0, .5);
+        }
+
+        .prev {
+            left: 0;
+        }
+
+        .next {
+            right: 0;
+        }
+
+        .order {
+            position: absolute;
+            display: flex;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .order li {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background-color: rgba(0, 0, 0, .5);
+            text-align: center;
+            line-height: 15px;
+            margin: 5px;
+            padding: 5px;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .order li.active {
+            color: orange;
+        }
+
+        .fade-enter-active {
+            transition: opacity .5s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+        }
+
+        /* .fade-leave-active {
+            transition: opacity .5s ease;
+        } */
+
+        .fade-enter,
+        .fade-leave-to {
+            opacity: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <ul class="pic" ref="pic">
+            <transition-group name="fade">
+                <li v-for="pic,idx in picList" v-show="idx===mark" :key="pic.src">
+                    <a href="javascript:;"></a>
+                    <img :src="pic.src" alt="">
+                    </a>
+                </li>
+            </transition-group>
+        </ul>
+        <div class="btn">
+            <a href="javascript:;" class="prev" @click="move(-1)">&lt;</a>
+            <a href="javascript:;" class="next" @click="move(1)">&gt;</a>
+        </div>
+
+        <ol class="order">
+            <li v-for="i,idx in picList.length" :key="idx" :class="{active:idx === mark}" @click="active(idx)">{{i}}
+            </li>
+        </ol>
+
+    </div>
+    <script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+    <script>
+        new Vue({
+            el: "#app",
+            data: {
+                mark: 0,
+                picList: [
+                    { src: "../img/1.jpg", opcity: 1 },
+                    { src: "../img/2.jpg", opcity: 1 },
+                    { src: "../img/3.jpg", opcity: 1 },
+                    { src: "../img/4.jpg", opcity: 1 },
+                ],
+                timer: null
+            },
+            methods: {
+                move(num) {
+                    clearTimeout(this.timer);
+                    this.mark = this.mark + num;
+                    if (this.mark === this.picList.length) {
+                        this.mark = 0;
+                    }
+
+                    if (this.mark < 0) {
+                        this.mark = this.picList.length - 1;
+                    }
+                    console.log(this.mark)
+                    this.autoPlay();
+
+                },
+                autoPlay() {
+                    const _this = this;
+                    this.timer = setTimeout(function () {
+                        _this.move(1);
+                    }, 2000)
+                },
+                active(idx) {
+                    clearInterval(this.timer);
+                    this.mark = idx;
+                    this.autoPlay();
+                },
+            },
+            created() {
+                this.autoPlay();
+            }
+        })
+
+
+    </script>
+</body>
+
+</html>

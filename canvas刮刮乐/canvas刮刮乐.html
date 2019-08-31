@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>canvas刮刮乐</title>
+    <style>
+        canvas {
+            /* background:  */
+            background-repeat: no-repeat;
+            background-position: center;
+            border: 1px solid red;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- 这里的width没有px单位, 是相对单位 如果不写CSS，会默认400px-->
+    <canvas id="myCanvas" width="400" height="400"></canvas>
+
+    <script>
+        var myCanvas = document.getElementById("myCanvas");
+        var ctx = myCanvas.getContext("2d");
+
+        // offsetWidth这个是css中这是的页面中展示多大
+        var w = myCanvas.width;
+        var h = myCanvas.height;
+        var lastPoi = {};
+
+        function init() {
+            var img = new Image();
+            var n = Math.random();
+            if (n > 0.1) {
+                img.src = "./no.png";
+            } else {
+                img.src = "./jiang.jpg";
+            }
+
+            img.onload = function () {
+                myCanvas.style.backgroundImage = "url(" + img.src + ")";
+                myCanvas.addEventListener("mousedown", downFun);
+
+            }
+            // 画蒙层
+            ctx.beginPath();
+            ctx.fillStyle = "#aaa";
+            ctx.fillRect(0, 0, w, h);
+            ctx.globalCompositeOperation = "destination-out";
+        }
+
+        init();
+
+
+        function downFun(e) {
+            lastPoi.x = e.clientX - myCanvas.offsetLeft;
+            lastPoi.y = e.clientY - myCanvas.offsetTop;
+
+            ctx.beginPath();
+            ctx.arc(lastPoi.x, lastPoi.y, 30, 0, Math.PI * 2);
+            ctx.closePath();
+            ctx.fill();
+
+            document.body.addEventListener("mousemove", moveFun);
+            document.body.addEventListener("mouseup", upFunc);
+        }
+
+        function moveFun(e) {
+            var x = e.clientX - myCanvas.offsetLeft;
+            var y = e.clientY - myCanvas.offsetTop;
+
+
+            ctx.beginPath();
+            ctx.moveTo(lastPoi.x, lastPoi.y);
+            ctx.lineTo(x, y);
+            ctx.lineWidth = 60;
+            ctx.lineCap = "round";
+            ctx.stroke();
+
+            // 这里开始做画圆不需要了
+            // ctx.beginPath();
+            // ctx.arc(x, y, 30, 0, Math.PI * 2);
+            // ctx.closePath();
+            // ctx.fill();
+
+            // 存好这一次(也就是下一轮连线的上一次)值
+            lastPoi.x = x;
+            lastPoi.y = y;
+        }
+
+        function upFunc() {
+            document.body.removeEventListener("mousemove", moveFun);
+            document.body.removeEventListener("mouseup", upFunc);
+            clearCover();
+
+        }
+
+        // 判断区域是否清楚
+        function clearCover() {
+            var imgData = ctx.getImageData(0, 0, w, h);
+            var sum = 0;
+            for (var i = 0; i < imgData.data.length; i += 4) {
+                if (imgData.data[i] == 0) {
+                    sum ++;
+                }
+            }
+            // 400*400
+            if(sum > w*h*0.7) {
+                ctx.clearRect(0, 0, w, h);
+            }
+        }
+
+        // 注意图片加载完成才能有后续操作
+        // 采用新旧图画重叠部分不显示的方式进行擦除
+        // 注意断点处理
+
+    </script>
+
+</body>
+
+</html>
