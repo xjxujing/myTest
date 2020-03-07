@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>自定义滚动条</title>
+    <style>
+        html {
+            font-size: calc(100vw / 7.5);
+        }
+
+        div {
+            width: 750px;
+            height: 200px;
+            background-color: red;
+            overflow: auto;
+        }
+
+        /*定义滚动条高宽及背景
+ 高宽分别对应横竖滚动条的尺寸*/
+        ::-webkit-scrollbar {
+            width: 16px;
+            height: 16px;
+            background-color: #F5F5F5;
+        }
+
+        /*定义滚动条轨道
+ 内阴影+圆角*/
+        ::-webkit-scrollbar-track {
+            -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            background-color: #F5F5F5;
+        }
+
+        /*定义滑块
+ 内阴影+圆角*/
+        ::-webkit-scrollbar-thumb {
+            border-radius: 10px;
+            -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+        }
+    </style>
+</head>
+
+<body>
+    <div>Lorem ipsum dolor sit amet consectetur adipisicing elit. Excepturi eius itaque ut! Nam, quae eligendi! Dolorum
+        magni impedit minus molestiae reiciendis, aspernatur quidem placeat voluptatum culpa officia laborum, deserunt
+        neque!
+        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Asperiores sapiente, non laborum incidunt molestiae
+        fugiat. Ad voluptate tenetur accusantium enim repellat cum, maxime aliquam, delectus temporibus sed impedit
+        nobis totam?
+    </div>
+</body>
+
+</html>

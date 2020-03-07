@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>图片上传</title>
+    <!-- 引入样式文件 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vant@2.2/lib/index.css">
+</head>
+<body>
+    <!-- vant的上传文件组件 -->
+    <div id="app">
+        <img-upload />
+    </div>
+    
+    <!-- 引入 Vue 和 Vant 的 JS 文件 -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vant@2.2/lib/vant.min.js"></script>
+    <script>
+        Vue.component('img-upload',{
+            template: `
+                <van-uploader :after-read="afterRead" />
+            `,
+            methods: {
+                afterRead(file) {
+                    // 此时可以自行将文件上传至服务器
+                    console.log(file)
+                }
+            }
+        })
+
+        new Vue({
+            el: '#app',
+        })
+
+    
+    </script>
+
+
+    
+    
+</body>
+</html>

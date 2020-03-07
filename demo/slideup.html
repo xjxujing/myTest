@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>slideUp</title>
+    <style>
+        .box {
+            width: 200px;
+            height: 200px;
+            background: pink;
+            /* transition: height 1s ease-in; */
+        }
+
+        /* .box.slide-up {
+            height: 0;
+        } */
+    </style>
+</head>
+
+<body>
+    <button class="btn">按钮</button>
+    <div class="box"></div>
+
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+
+    <script>
+        let oBox = document.getElementsByClassName("box")[0];
+        let oBtn = document.getElementsByClassName("btn")[0];
+
+        // oBtn.onclick = function () {
+        //     if (!Array.from(oBox.classList).includes("slide-up")) {
+        //         oBox.className = "box slide-up";
+        //     } else {
+        //         oBox.className = "box";
+        //     }
+        // }
+        $(".btn").click(function () {
+            $(".box").slideUp();
+        })
+    </script>
+</body>
+
+</html>

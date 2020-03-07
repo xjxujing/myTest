@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        let needWait = () => {
+            setTimeout(() => {
+                console.log('need wait!')
+            }, 2000)
+        }
+
+
+        // needWait()
+        let ha = () => {
+            setTimeout(() => {
+                console.log("hahh")
+            }, 3000)
+        }
+
+        // ha()
+        // needWait()
+
+
+        // needWait()不变 怎么写 才能先执行needWit 再打印"hah" 下面那样写还是先打印"hah
+        /*
+        let p = () => {
+            return new Promise(resolve => {
+                needWait()
+                resolve()
+            })
+        }
+
+        async function f() {
+            await p()
+            console.log("hah")
+        }
+
+        */
+
+        let p = new Promise(resolve => {
+                needWait()
+                resolve()
+            })
+
+
+        let p2 = () => {
+            return new Promise(resolve => {
+                ha()
+                resolve()
+            })
+        }
+
+        p.then(()=> {
+            console.log(123)
+        })
+
+    </script>
+</body>
+
+</html>

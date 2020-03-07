@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        let a = {a: 10}
+        console.log(a) // a指向内存地址
+
+        let b = {b: 10}
+        console.log(b) // b指向内存地址
+
+        let obj = {
+            a: 10
+        }
+        console.log(obj)
+
+        obj[b] = 20 // b是变量，被转成字符串"[object Object]"
+        console.log(obj[a]) // 20 这里a也是变量，被转成字符串"[object Object]"
+    
+    </script>
+</body>
+</html>
