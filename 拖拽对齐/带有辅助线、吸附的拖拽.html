@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <style>
+            body {
+                font-family: courier new, courier;
+                font-size: 12px;
+                padding: 0;
+                margin: 0;
+            }
+            .draggable_list {
+                width: 500px;
+                height: 500px;
+                background: #ccc;
+                position: relative;
+                left: 200px;
+                top: 200px;
+            }
+            .draggable {
+                border: 1px solid #ccc;
+                display: inline-block;
+                cursor: move;
+                position: absolute;
+            }
+            .guide {
+                display: none;
+                position: absolute;
+                left: 0;
+                top: 0;
+            }
+            #guide-h {
+                border-top: 1px dashed #55f;
+                width: 100%;
+            }
+            #guide-v {
+                border-left: 1px dashed #55f;
+                height: 100%;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="draggable_list">
+            <!--需要拖动的div-->
+            <div class="draggable">第一个11111111111111div</div>
+            <div class="draggable">第二个22div</div>
+            <div class="draggable">第三个333333div</div>
+            <div class="draggable">第四个ggdgdgdiv</div>
+            <div class="draggable">第五个div</div>
+            <div class="draggable">第六个div</div>
+            <!--拖动辅助线-->
+            <div id="guide-h" class="guide"></div>
+            <div id="guide-v" class="guide"></div>
+        </div>
+        <script src="https://cdn.bootcss.com/jquery/1.11.1/jquery.js"></script>
+        <script src="https://cdn.bootcss.com/jqueryui/1.12.1/jquery-ui.js"></script>
+        <link href="https://cdn.bootcss.com/jqueryui/1.12.1/jquery-ui.css" rel="stylesheet" />
+        <script>
+            /**
+             * 指标拖动辅助标线
+             */
+            var MIN_DISTANCE = 8; //捕获的最小距离
+            var guides = []; // 没有可用的引导
+            var innerOffsetX, innerOffsetY;
+            $(".draggable").draggable({
+                start: function (event, ui) {
+                    guides = $.map($(".draggable").not(this), computeGuidesForElement); //offsetX、offsetY：源元素（srcElement）的X,Y坐标
+                    innerOffsetX = event.offsetX;
+                    innerOffsetY = event.offsetY;
+                }
+                /**
+                 * 参数说明
+                 * event事件的
+                 * offsetX：
+                 * outerwidth： 属性是一个只读的整数，声明了整个窗口的宽度。
+                 * outerheight： 属性是一个只读的整数，声明了整个窗口的高度。
+                 */,
+                drag: function (event, ui) {
+                    //迭代所有的guids，记住最近的h和v guids
+                    var guideV,
+                        guideH,
+                        distV = MIN_DISTANCE + 1,
+                        distH = MIN_DISTANCE + 1,
+                        offsetV,
+                        offsetH;
+                    var chosenGuides = {
+                        top: {
+                            dist: MIN_DISTANCE + 1,
+                        },
+                        left: {
+                            dist: MIN_DISTANCE + 1,
+                        },
+                    };
+                    var $t = $(this); //pageX、pageY：文档坐标x、y ;
+                    var pos = {
+                        top: event.pageY - $(".draggable_list").offset().top - innerOffsetY,
+                        left: event.pageX - $(".draggable_list").offset().left - innerOffsetX,
+                    }; //outerHeight、outerWidth：整个浏览器的高度、宽度
+                    var w = $t.outerWidth() - 1;
+                    var h = $t.outerHeight() - 1;
+                    var elemGuides = computeGuidesForElement(null, pos, w, h);
+                    $.each(guides, function (i, guide) {
+                        $.each(elemGuides, function (i, elemGuide) {
+                            if (guide.type == elemGuide.type) {
+                                var prop = guide.type == "h" ? "top" : "left";
+                                var d = Math.abs(elemGuide[prop] - guide[prop]);
+                                if (d < chosenGuides[prop].dist) {
+                                    chosenGuides[prop].dist = d;
+                                    chosenGuides[prop].offset = elemGuide[prop] - pos[prop];
+                                    chosenGuides[prop].guide = guide;
+                                }
+                            }
+                        });
+                    });
+                    if (chosenGuides.top.dist <= MIN_DISTANCE) {
+                        $("#guide-h").css("top", chosenGuides.top.guide.top).show();
+                        ui.position.top = chosenGuides.top.guide.top - chosenGuides.top.offset;
+                    } else {
+                        $("#guide-h").hide();
+                        ui.position.top = pos.top;
+                    }
+                    if (chosenGuides.left.dist <= MIN_DISTANCE) {
+                        $("#guide-v").css("left", chosenGuides.left.guide.left).show();
+                        ui.position.left = chosenGuides.left.guide.left - chosenGuides.left.offset;
+                    } else {
+                        $("#guide-v").hide();
+                        ui.position.left = pos.left;
+                    }
+                },
+                stop: function (event, ui) {
+                    $("#guide-v, #guide-h").hide();
+                },
+            });
+            function computeGuidesForElement(elem, pos, w, h) {
+                if (elem != null) {
+                    var $t = $(elem); //offset:返回当前元素 的偏移量
+                    pos = $t.position();
+                    pos = {
+                        left: $t.position().left,
+                        top: $t.position().top,
+                    };
+                    w = $t.outerWidth() - 1;
+                    h = $t.outerHeight() - 1;
+                }
+                return [
+                    {
+                        type: "h",
+                        left: pos.left,
+                        top: pos.top,
+                    }, //垂直方向左下对齐线
+                    {
+                        type: "h",
+                        left: pos.left,
+                        top: pos.top + h,
+                    },
+                    {
+                        type: "v",
+                        left: pos.left,
+                        top: pos.top,
+                    },
+                    {
+                        type: "v",
+                        left: pos.left + w,
+                        top: pos.top,
+                    }, //您可以添加_any_其他指南在这里就好了（如指南10像素单元的左）
+                    {
+                        type: "h",
+                        left: pos.left,
+                        top: pos.top + h / 2,
+                    },
+                    {
+                        type: "v",
+                        left: pos.left + w / 2,
+                        top: pos.top,
+                    },
+                ];
+            }
+        </script>
+    </body>
+</html>
